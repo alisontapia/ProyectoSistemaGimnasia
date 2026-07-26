@@ -114,15 +114,15 @@ public class CompetitionController implements Serializable {
             if (editingId != null) {
                 Competition competition = competitionFacade.update(editingId, name, date, location,
                         difficultyJudgeId, executionJudgeId, artisticJudgeId);
-                FacesUtil.addSuccessMessage("Competencia actualizada", competition.getName());
+                FacesUtil.addSuccessMessage(" Competencia actualizada", competition.getName());
             } else {
                 Competition competition = competitionFacade.create(name, date, location,
                         difficultyJudgeId, executionJudgeId, artisticJudgeId);
-                FacesUtil.addSuccessMessage("Competencia creada", competition.getName());
+                FacesUtil.addSuccessMessage(" Competencia creada", competition.getName());
             }
             reload();
         } catch (EntityNotFoundException | InvalidJudgeAssignmentException e) {
-            FacesUtil.addErrorMessage("No se pudo guardar la competencia", e.getMessage());
+            FacesUtil.addErrorMessage(" No se pudo guardar la competencia", e.getMessage());
         }
     }
 
@@ -141,10 +141,10 @@ public class CompetitionController implements Serializable {
     public void activate(Competition competition) {
         try {
             competitionFacade.setActive(competition.getId());
-            FacesUtil.addSuccessMessage("Competencia activa", competition.getName());
+            FacesUtil.addSuccessMessage(" Competencia activa", competition.getName());
             reload();
         } catch (EntityNotFoundException e) {
-            FacesUtil.addErrorMessage("No se pudo activar", e.getMessage());
+            FacesUtil.addErrorMessage(" No se pudo activar", e.getMessage());
         }
     }
 
@@ -164,10 +164,10 @@ public class CompetitionController implements Serializable {
         }
         if (isActive(pendingClosing)) {
             return "\"" + pendingClosing.getName() + "\" es la competencia ACTIVA en este momento. "
-                    + "Si la cierras, los jueces dejaran de poder registrar calificaciones de inmediato "
+                    + " Si la cierras, los jueces dejaran de poder registrar calificaciones de inmediato "
                     + "(solo podran consultar lo ya guardado). Deseas continuar?";
         }
-        return "Vas a cerrar \"" + pendingClosing.getName() + "\": las calificaciones quedaran solo para consulta. "
+        return " Vas a cerrar \"" + pendingClosing.getName() + "\": las calificaciones quedarán solo para consulta. "
                 + "Deseas continuar?";
     }
 
@@ -181,21 +181,21 @@ public class CompetitionController implements Serializable {
     public void close(Competition competition) {
         try {
             competitionFacade.close(competition.getId());
-            FacesUtil.addSuccessMessage("Competencia cerrada",
+            FacesUtil.addSuccessMessage(" Competencia cerrada",
                     competition.getName() + " - las calificaciones quedan solo para consulta.");
             reload();
         } catch (EntityNotFoundException e) {
-            FacesUtil.addErrorMessage("No se pudo cerrar", e.getMessage());
+            FacesUtil.addErrorMessage(" No se pudo cerrar", e.getMessage());
         }
     }
 
     public void reopen(Competition competition) {
         try {
             competitionFacade.reopen(competition.getId());
-            FacesUtil.addSuccessMessage("Competencia reabierta", competition.getName());
+            FacesUtil.addSuccessMessage(" Competencia reabierta", competition.getName());
             reload();
         } catch (EntityNotFoundException e) {
-            FacesUtil.addErrorMessage("No se pudo reabrir", e.getMessage());
+            FacesUtil.addErrorMessage(" No se pudo reabrir", e.getMessage());
         }
     }
 
