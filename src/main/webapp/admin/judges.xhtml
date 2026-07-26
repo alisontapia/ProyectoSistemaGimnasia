@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+
+        <ui:define name="title-view">
+            Gestión de jueces
+        </ui:define>
+
+        <ui:define name="content">
+
+            <h:form id="judgeForm">
+
+                <p:growl showDetail="true"/>
+
+                <p:confirmDialog global="true" showEffect="fade" width="320">
+                    <p:commandButton value="Si, eliminar"
+                                     type="button"
+                                     styleClass="ui-confirmdialog-yes ui-button-danger"
+                                     icon="pi pi-check"/>
+
+                    <p:commandButton value="Cancelar"
+                                     type="button"
+                                     styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="pi pi-times"/>
+                </p:confirmDialog>
+
+                <div class="page-title">
+                    <i class="pi pi-users"
+                       style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Jueces registrados</h3>
+                </div>
+
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton value="Registrar juez"
+                                         icon="pi pi-plus"
+                                         actionListener="#{judgeAdminController.openNew}"
+                                         oncomplete="PF('judgeDialog').show()"
+                                         update=":judgeForm:judgeDialog"/>
+                    </f:facet>
+                </p:toolbar>
+
+                <p:dataTable id="judgeTable"
+                             var="judge"
+                             value="#{judgeAdminController.judges}"
+                             emptyMessage="No hay jueces registrados."
+                             paginator="true"
+                             rows="10"
+                             styleClass="mt-3">
+
+                    <p:column headerText="Cédula">
+                        <h:outputText value="#{judge.nationalId}"/>
+                    </p:column>
+
+                    <p:column headerText="Nombres">
+                        <h:outputText value="#{judge.firstName}"/>
+                    </p:column>
+
+                    <p:column headerText="Apellidos">
+                        <h:outputText value="#{judge.lastName}"/>
+                    </p:column>
+
+                    <p:column headerText="Especialidad">
+                        <h:outputText value="#{judge.specialty}"/>
+                    </p:column>
+
+                    <p:column headerText="Cuenta de acceso">
+                        <p:tag value="Asignada (#{judge.user.username})"
+                               severity="success"
+                               rendered="#{judge.hasAccount()}"/>
+
+                        <p:tag value="Sin cuenta"
+                               severity="warning"
+                               rendered="#{!judge.hasAccount()}"/>
+                    </p:column>
+
+                    <p:column headerText="Acciones"
+                              style="width:130px;text-align:center">
+
+                        <p:commandButton icon="pi pi-pencil"
+                                         styleClass="rounded-button ui-button-secondary"
+                                         actionListener="#{judgeAdminController.openEdit(judge)}"
+                                         oncomplete="PF('judgeDialog').show()"
+                                         update=":judgeForm:judgeDialog"
+                                         process="@this"
+                                         style="margin-right:.4rem"/>
+
+                        <p:commandButton icon="pi pi-trash"
+                                         styleClass="rounded-button ui-button-danger"
+                                         actionListener="#{judgeAdminController.delete(judge)}"
+                                         update=":judgeForm"
+                                         process="@this">
+
+                            <p:confirm header="Eliminar juez"
+                                       icon="pi pi-exclamation-triangle"
+                                       message="¿Eliminar a #{judge.fullName}? Esta acción no se puede deshacer."/>
+
+                        </p:commandButton>
+
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:dialog header="Juez"
+                        widgetVar="judgeDialog"
+                        id="judgeDialog"
+                        modal="true"
+                        responsive="true"
+                        width="420">
+
+                    <h:panelGrid columns="2" cellpadding="6">
+
+                        <p:outputLabel for="nationalId" value="Cédula:"/>
+                        <p:inputText id="nationalId"
+                                    value="#{judgeAdminController.nationalId}"
+                                    disabled="#{judgeAdminController.editing}"
+                                    required="true">
+                            <f:validator validatorId="cedulaEcuatorianaValidator"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="firstName" value="Nombres:"/>
+                        <p:inputText id="firstName"
+                                    value="#{judgeAdminController.firstName}"
+                                    required="true"/>
+
+                        <p:outputLabel for="lastName" value="Apellidos:"/>
+                        <p:inputText id="lastName"
+                                    value="#{judgeAdminController.lastName}"
+                                    required="true"/>
+
+                        <p:outputLabel for="specialty" value="Especialidad:"/>
+                        <p:selectOneMenu id="specialty"
+                                        value="#{judgeAdminController.specialty}"
+                                        required="true"
+                                        style="width:100%">
+
+                            <f:selectItem itemLabel="-- Seleccione --"
+                                        itemValue="#{null}"
+                                        noSelectionOption="true"/>
+
+                            <f:selectItems value="#{judgeAdminController.availableSpecialties}"/>
+
+                        </p:selectOneMenu>
+
+                    </h:panelGrid>
+
+                    <p:outputLabel
+                        value="La cuenta de acceso (usuario/contraseña) se asigna después, desde 'Usuarios'."
+                        style="display:block;margin-top:.5rem;color:var(--pastel-purple-strong)"/>
+
+                    <f:facet name="footer">
+
+                        <p:commandButton value="Guardar"
+                                        icon="pi pi-check"
+                                        action="#{judgeAdminController.save}"
+                                        update=":judgeForm"
+                                        oncomplete="if(!args.validationFailed){PF('judgeDialog').hide();}"/>
+
+                        <p:commandButton value="Cancelar"
+                                        icon="pi pi-times"
+                                        immediate="true"
+                                        onclick="PF('judgeDialog').hide()"
+                                        styleClass="ui-button-secondary"/>
+
+                    </f:facet>
+
+                </p:dialog>
+
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</html>

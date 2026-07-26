@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">Mis Calificaciones</ui:define>
+        <ui:define name="content">
+            <h:form id="myScoresForm">
+                <p:growl showDetail="true"/>
+                <div class="page-title">
+                    <i class="pi pi-list" style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Mis calificaciones - #{judgeMyScoresController.currentJudge.specialty}</h3>
+                </div>
+
+                <div class="pastel-alert" style="display:#{judgeMyScoresController.hasScores() ? 'none' : 'flex'}">
+                    <i class="pi pi-exclamation-triangle"/>
+                    <span>Aún no has registrado calificaciones.</span>
+                </div>
+
+                <h:panelGroup rendered="#{judgeMyScoresController.hasScores()}">
+                    <h:panelGrid columns="2" cellpadding="6">
+                        <p:outputLabel for="competitionSelect" value="Competencia:"/>
+                        <p:selectOneMenu id="competitionSelect" value="#{judgeMyScoresController.selectedCompetitionId}">
+                            <f:selectItem itemLabel="Seleccione una competencia" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:converter converterId="jakarta.faces.Long"/>
+                            <f:selectItems value="#{judgeMyScoresController.competitionsInScores}" var="c"
+                                           itemLabel="#{c.name}" itemValue="#{c.id}"/>
+                            <p:ajax listener="#{judgeMyScoresController.onCompetitionChange}" update=":myScoresForm:scoresTable"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </h:panelGroup>
+
+                <p:dataTable id="scoresTable" var="summary" value="#{judgeMyScoresController.scoresForSelectedCompetition}"
+                             emptyMessage="Selecciona una competencia para ver tus calificaciones." paginator="true" rows="10"
+                             style="margin-top:0.5rem">
+                    <p:column headerText="Categoría">
+                        <h:outputText value="#{summary.category.name}"/>
+                    </p:column>
+                    <p:column headerText="Gimnasta">
+                        <h:outputText value="#{summary.gymnast.fullName}"/>
+                    </p:column>
+                    <p:column headerText="Especialidad">
+                        <h:outputText value="#{summary.specialty}"/>
+                    </p:column>
+                    <p:column headerText="Puntaje final">
+                        <h:outputText value="#{summary.finalScore}">
+                            <f:convertNumber pattern="0.00"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Estado">
+                        <p:tag value="#{summary.estado}" severity="#{summary.closed ? 'secondary' : 'success'}"/>
+                    </p:column>
+                    <p:column headerText="Acción" style="width:140px">
+                        <p:commandButton value="Ver detalles" icon="pi pi-eye" styleClass="ui-button-outlined"
+                                         actionListener="#{judgeMyScoresController.selectSummary(summary)}" process="@this"
+                                         oncomplete="PF('detailDialog').show()"
+                                         update=":myScoresForm:detailDialog"/>
+                    </p:column>
+                </p:dataTable>
+
+                                <p:dialog header="Detalle de la evaluación" widgetVar="detailDialog" id="detailDialog"
+                          modal="true" responsive="true" width="560">
+                    <h:panelGroup rendered="#{judgeMyScoresController.selectedSummary != null}">
+                        <h:panelGrid columns="2" cellpadding="4">
+                            <p:outputLabel value="Competencia:"/>
+                            <h:outputText value="#{judgeMyScoresController.selectedSummary.competition.name}"/>
+
+                            <p:outputLabel value="Categoría:"/>
+                            <h:outputText value="#{judgeMyScoresController.selectedSummary.category.name}"/>
+
+                            <p:outputLabel value="Gimnasta:"/>
+                            <h:outputText value="#{judgeMyScoresController.selectedSummary.gymnast.fullName}"/>
+
+                            <p:outputLabel value="Estado:"/>
+                            <p:tag value="#{judgeMyScoresController.selectedSummary.estado}"
+                                   severity="#{judgeMyScoresController.selectedSummary.closed ? 'secondary' : 'success'}"/>
+                        </h:panelGrid>
+
+                        <h:outputText value="Criterios y valores registrados :" style="font-weight:bold; display:block; margin-top:1rem;"/>
+                        <p:dataTable var="detail" value="#{judgeMyScoresController.selectedSummary.details}">
+                            <p:column headerText="Criterio">
+                                <h:outputText value="#{detail.criterion}"/>
+                            </p:column>
+                            <p:column headerText="#{judgeMyScoresController.penaltySpecialty ? 'Penalización' : 'Puntaje'}" style="width:120px">
+                                <h:outputText value="#{detail.score}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha" style="width:110px">
+                                <h:outputText value="#{detail.formattedDate}"/>
+                            </p:column>
+                            <p:column headerText="Acción" style="width:90px">
+                                <p:commandButton icon="pi pi-pencil" styleClass="ui-button-secondary"
+                                                 rendered="#{!judgeMyScoresController.selectedSummary.closed}"
+                                                 actionListener="#{judgeMyScoresController.openEdit(detail)}" process="@this"
+                                                 oncomplete="PF('editScoreDialog').show()"
+                                                 update=":myScoresForm:editScoreDialog"/>
+                            </p:column>
+                        </p:dataTable>
+
+                        <h:panelGroup rendered="#{judgeMyScoresController.penaltySpecialty}">
+                            <p style="margin-top:0.75rem">
+                                <b>Total penalizaciones: </b>
+                                <h:outputText value="#{judgeMyScoresController.selectedSummary.totalPenalizaciones}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                                &#160;&#8594;&#160;
+                                <b>Nota final = 10.00 - Penalizaciones = </b>
+                                <h:outputText value="#{judgeMyScoresController.selectedSummary.finalScore}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </p>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{!judgeMyScoresController.penaltySpecialty}">
+                            <p style="margin-top:0.75rem">
+                                <b>Nota final (suma de los criterios): </b>
+                                <h:outputText value="#{judgeMyScoresController.selectedSummary.finalScore}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </p>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" immediate="true"
+                                         onclick="PF('detailDialog').hide()" styleClass="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+
+                <p:dialog header="Actualizar calificación" widgetVar="editScoreDialog" id="editScoreDialog"
+                          modal="true" responsive="true" width="380">
+                    <h:panelGrid columns="2" cellpadding="6" rendered="#{judgeMyScoresController.selectedEvaluation != null}">
+                        <p:outputLabel value="Gimnasta:"/>
+                        <h:outputText value="#{judgeMyScoresController.selectedEvaluation.gymnast.fullName}"/>
+
+                        <p:outputLabel value="Criterio:"/>
+                        <h:outputText value="#{judgeMyScoresController.selectedEvaluation.criterion}"/>
+
+                        <p:outputLabel for="newValue" value="Nuevo valor (0-2):"/>
+                        <p:inputNumber id="newValue" value="#{judgeMyScoresController.editedValue}"
+                                       decimalPlaces="2" minValue="0" maxValue="2"/>
+                    </h:panelGrid>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         action="#{judgeMyScoresController.saveEdit}"
+                                         update=":myScoresForm"
+                                         oncomplete="PF('editScoreDialog').hide()"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" immediate="true"
+                                         onclick="PF('editScoreDialog').hide()" styleClass="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

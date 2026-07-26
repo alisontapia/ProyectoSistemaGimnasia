@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">Ranking</ui:define>
+        <ui:define name="content">
+            <h:form id="rankingForm">
+                <p:growl showDetail="true"/>
+                <div class="page-title">
+                    <i class="pi pi-trophy" style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Ranking</h3>
+                </div>
+
+                <div class="pastel-alert" style="display:#{rankingController.hasCompetitionsWithResults() ? 'none' : 'flex'}">
+                    <i class="pi pi-exclamation-triangle"/>
+                    <span>Todavía no hay resultados disponibles en ninguna competencia.</span>
+                </div>
+
+                <h:panelGroup rendered="#{rankingController.hasCompetitionsWithResults()}">
+                    <h:panelGrid columns="2" cellpadding="6">
+                        <p:outputLabel for="competitionSelect" value="Competencia:"/>
+                        <p:selectOneMenu id="competitionSelect" value="#{rankingController.selectedCompetitionId}">
+                            <f:selectItem itemLabel="Seleccione una competencia" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:converter converterId="jakarta.faces.Long"/>
+                            <f:selectItems value="#{rankingController.competitions}" var="c"
+                                           itemLabel="#{c.name}" itemValue="#{c.id}"/>
+                            <p:ajax listener="#{rankingController.onCompetitionChange}"
+                                    update=":rankingForm:categorySelect :rankingForm:resultsPanel"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="categorySelect" value="Categoría:"/>
+                        <p:selectOneMenu id="categorySelect" value="#{rankingController.selectedCategoryId}"
+                                         disabled="#{empty rankingController.categories}">
+                            <f:selectItem itemLabel="Seleccione una categoría" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:converter converterId="jakarta.faces.Long"/>
+                            <f:selectItems value="#{rankingController.categories}" var="cat"
+                                           itemLabel="#{cat.name} (#{cat.level})" itemValue="#{cat.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+
+                    <p:commandButton value="Consultar Ranking" icon="pi pi-search"
+                                      action="#{rankingController.consultarRanking}"
+                                      update=":rankingForm:resultsPanel" style="margin-top:0.5rem"/>
+
+                    <h:panelGroup id="resultsPanel" layout="block" style="margin-top:1rem">
+                        <p:dataTable var="result" value="#{rankingController.ranking}"
+                                     emptyMessage="Aún no hay resultados disponibles para la selección actual.">
+                            <p:column headerText="Pos." style="width:70px">
+                                <h:outputText value="#{result.position == 1 ? '🥇' : result.position == 2 ? '🥈' : result.position == 3 ? '🥉' : result.position}"/>
+                            </p:column>
+                            <p:column headerText="Gimnasta">
+                                <h:outputText value="#{result.gymnast.fullName}"/>
+                            </p:column>
+                            <p:column headerText="Categoría">
+                                <h:outputText value="#{result.category.name}"/>
+                            </p:column>
+                            <p:column headerText="Total">
+                                <h:outputText value="#{result.finalScore}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Dificultad">
+                                <h:outputText value="#{rankingController.totalDifficulty(result)}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Ejecución">
+                                <h:outputText value="#{rankingController.totalExecution(result)}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Artístico">
+                                <h:outputText value="#{rankingController.totalArtistic(result)}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estado">
+                                <p:tag value="#{rankingController.estadoOf(result)}"
+                                       severity="#{rankingController.estadoOf(result) == 'Cerrada' ? 'secondary' : 'success'}"/>
+                            </p:column>
+                            <p:column headerText="Distinción">
+                                <p:tag value="#{result.medal}"
+                                       severity="#{result.position == 1 ? 'warning' : result.position le 3 ? 'info' : 'secondary'}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

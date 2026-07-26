@@ -1,0 +1,257 @@
+
+
+:root {
+    --pastel-pink: #ffd6ea;
+    --pastel-pink-soft: #ffe9f3;
+    --pastel-pink-strong: #f6a6cf;
+    --pastel-purple: #d9c6f5;
+    --pastel-purple-soft: #efe4fb;
+    --pastel-purple-strong: #b18fe0;
+    --pastel-lavender: #f3e9ff;
+    --pastel-mint: #c9f2e2;
+    --pastel-peach: #ffe3cf;
+    --text-soft: #5b4b72;
+    --text-softer: #8577a0;
+    --card-radius: 20px;
+    --shadow-soft: 0 8px 24px rgba(177, 143, 224, 0.18);
+    --shadow-hover: 0 12px 28px rgba(246, 166, 207, 0.32);
+}
+
+/* ---------- Base ---------- */
+body {
+    font-family: 'Quicksand', 'Segoe UI', sans-serif !important;
+    color: var(--text-soft);
+    background: linear-gradient(160deg, #fff5fb 0%, #f6efff 45%, #f1e9ff 100%);
+    background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--text-soft) !important;
+    font-family: 'Quicksand', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+.card, .centered-card > .ui-panel, .ui-widget-content {
+    animation: fadeInUp .5s ease both;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Encabezado ---------- */
+.header-container {
+    background: linear-gradient(90deg, var(--pastel-pink-soft), var(--pastel-lavender)) !important;
+    border-bottom: none !important;
+    box-shadow: 0 2px 12px rgba(177, 143, 224, 0.15);
+}
+
+.app-title svg { color: var(--pastel-purple-strong) !important; }
+
+/* ---------- Barra de menu (toolbar) ---------- */
+.ui-toolbar {
+    background: linear-gradient(90deg, var(--pastel-purple), var(--pastel-pink)) !important;
+    border: none !important;
+    border-radius: 0 0 18px 18px;
+    padding: .6rem 1rem !important;
+    box-shadow: var(--shadow-soft);
+}
+
+.ui-toolbar .ui-button, .ui-toolbar .ui-menubutton {
+    background: rgba(255,255,255,0.55) !important;
+    border: 1px solid rgba(255,255,255,0.6) !important;
+    color: var(--text-soft) !important;
+    border-radius: 999px !important;
+    transition: transform .15s ease, background .2s ease;
+}
+
+.ui-toolbar .ui-button:hover {
+    background: #ffffff !important;
+    transform: translateY(-2px) scale(1.03);
+}
+
+/* ---------- Botones generales ---------- */
+.ui-button, .ui-commandlink, .ui-button.ui-widget {
+    border-radius: 999px !important;
+    border: none !important;
+    background: linear-gradient(135deg, var(--pastel-purple-strong), var(--pastel-pink-strong)) !important;
+    color: #ffffff !important;
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    box-shadow: var(--shadow-soft);
+}
+
+.ui-button:hover, .ui-button:focus {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: var(--shadow-hover);
+    filter: brightness(1.04);
+}
+
+.ui-button.ui-button-secondary {
+    background: var(--pastel-lavender) !important;
+    color: var(--text-soft) !important;
+    box-shadow: none;
+}
+
+/* ---------- Paneles y tarjetas ---------- */
+.ui-panel {
+    border-radius: var(--card-radius) !important;
+    border: 1px solid var(--pastel-purple-soft) !important;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+.ui-panel .ui-panel-titlebar {
+    background: linear-gradient(90deg, var(--pastel-purple-strong), var(--pastel-pink-strong)) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 700;
+    letter-spacing: .2px;
+}
+
+.ui-card, .ui-widget.ui-card {
+    border-radius: var(--card-radius) !important;
+    border: 1px solid var(--pastel-purple-soft) !important;
+    box-shadow: var(--shadow-soft);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.ui-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.metric-card .ui-card-title { color: var(--pastel-purple-strong) !important; }
+
+/* icono circular pastel para las tarjetas del panel */
+.icon-badge {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto .5rem auto;
+    background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-purple));
+    color: #ffffff; font-size: 1.4rem;
+    box-shadow: var(--shadow-soft);
+}
+
+/* ---------- Dialogos ---------- */
+.ui-dialog .ui-dialog-titlebar {
+    background: linear-gradient(90deg, var(--pastel-purple-strong), var(--pastel-pink-strong)) !important;
+    color: #fff !important;
+    border-radius: 16px 16px 0 0;
+}
+
+.ui-dialog .ui-dialog-content {
+    background: #fffafd !important;
+    border-radius: 0 0 16px 16px;
+}
+
+.ui-dialog {
+    border-radius: 16px !important;
+    box-shadow: var(--shadow-hover) !important;
+    border: none !important;
+}
+
+/* ---------- Tablas ---------- */
+.ui-datatable thead th {
+    background: var(--pastel-lavender) !important;
+    color: var(--text-soft) !important;
+    border-color: var(--pastel-purple-soft) !important;
+    font-weight: 700;
+}
+
+.ui-datatable tbody td {
+    border-color: #f2e9fb !important;
+}
+
+.ui-datatable tbody tr {
+    transition: background .15s ease;
+}
+
+.ui-datatable tbody tr:hover {
+    background: var(--pastel-pink-soft) !important;
+}
+
+.ui-datatable tbody tr.ui-datatable-even {
+    background: #fffdff;
+}
+
+/* ---------- Etiquetas / Tags (medallas, estados) ---------- */
+.ui-tag {
+    border-radius: 999px !important;
+    padding: .3rem .75rem !important;
+    font-weight: 700 !important;
+}
+
+.ui-tag.ui-tag-success { background: var(--pastel-mint) !important; color: #2a7a5f !important; }
+.ui-tag.ui-tag-warning { background: var(--pastel-peach) !important; color: #a15b1f !important; }
+.ui-tag.ui-tag-info { background: var(--pastel-lavender) !important; color: var(--pastel-purple-strong) !important; }
+.ui-tag.ui-tag-secondary { background: #f1f1f6 !important; color: var(--text-softer) !important; }
+
+/* ---------- Inputs ---------- */
+.ui-inputfield, .ui-inputtext, .ui-selectonemenu {
+    border-radius: 12px !important;
+    border: 1px solid var(--pastel-purple-soft) !important;
+}
+
+.ui-inputfield:focus, .ui-inputtext:focus {
+    border-color: var(--pastel-purple-strong) !important;
+    box-shadow: 0 0 0 3px rgba(177,143,224,0.2) !important;
+}
+
+/* ---------- Pie de pagina ---------- */
+.footer-container {
+    background: linear-gradient(90deg, var(--pastel-lavender), var(--pastel-pink-soft)) !important;
+    border-top: none !important;
+}
+
+/* ---------- Aviso informativo (reemplaza p:message suelto) ---------- */
+.pastel-alert {
+    align-items: center;
+    gap: .6rem;
+    background: linear-gradient(90deg, var(--pastel-peach), var(--pastel-pink-soft));
+    color: #a15b1f;
+    border: 1px solid #ffd9b3;
+    border-radius: 14px;
+    padding: .85rem 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.pastel-alert i { font-size: 1.2rem; }
+
+.hero-illustration { max-width: 260px; margin: 0 auto 1rem auto; display: block; }
+
+.floating { animation: floaty 3.5s ease-in-out infinite; }
+
+@keyframes floaty {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.sparkle { animation: sparkle 2.2s ease-in-out infinite; transform-origin: center; }
+
+@keyframes sparkle {
+    0%, 100% { opacity: .35; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+.ui-outputlabel-rfi,
+.ui-outputlabel-rfi::before,
+.ui-outputlabel-rfi::after {
+    display: none !important;
+    content: "" !important;
+}
+
+/* Algunas versiones utilizan pseudo-elementos */
+label.ui-outputlabel::after,
+.ui-outputlabel::after {
+    content: "" !important;
+}
+
+/* Compatibilidad con otros temas */
+.p-required,
+.p-required::before,
+.p-required::after {
+    display: none !important;
+    content: "" !important;
+}

@@ -1,0 +1,66 @@
+services:
+  gimnasia-pg-db:
+    image: postgres:${POSTGRES_VERSION}
+    restart: unless-stopped
+    container_name: gimnasia-pg-db-container
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_PGSQL_PORT_PUBLIC}:5432
+    volumes:
+      - gimnasia-pg-data:/var/lib/postgresql
+    networks:
+      gimnasia-pg-network:
+        ipv4_address: 172.30.0.251
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  gimnasia-pg-adminer-db:
+    image: adminer
+    container_name: gimnasia-pg-adminer-db-container
+    restart: unless-stopped
+    ports:
+      - 8181:8080
+    depends_on:
+      - gimnasia-pg-db
+    networks:
+      gimnasia-pg-network:
+        ipv4_address: 172.30.0.253
+
+  gimnasia-view-pgadmin4:
+    container_name: gimnasia-pgadmin4-container
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "adminDB@postgres.org"
+      PGADMIN_DEFAULT_PASSWORD: "admin123"
+    ports:
+      - 82:80
+    depends_on:
+      - gimnasia-pg-db
+    networks:
+      gimnasia-pg-network:
+        ipv4_address: 172.30.0.254
+
+networks:
+  gimnasia-pg-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
+
+volumes:
+  gimnasia-pg-data:
+    name: gimnasia-pg-data-local
+    driver: local
+    driver_opts:
+      type: none
+      device: ${LOCAL_DATA_DIR_BD}
+      o: bind

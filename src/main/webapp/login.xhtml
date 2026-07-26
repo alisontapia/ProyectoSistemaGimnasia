@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">
+            Sistema de Gimnasia Rítmica - Ingreso
+        </ui:define>
+        <ui:define name="content">
+            <h:form>
+                <div class="card">
+                    <div style="text-align:center; padding:.25rem 0 1rem 0;">
+                                                <svg class="hero-illustration floating" width="140" viewBox="0 0 140 120" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 40 C 40 10, 90 10, 115 35" stroke="#f6a6cf" stroke-width="4"
+                                  fill="none" stroke-linecap="round"/>
+                            <path d="M20 40 C 40 65, 90 65, 115 35" stroke="#b18fe0" stroke-width="4"
+                                  fill="none" stroke-linecap="round"/>
+                            <circle cx="67" cy="38" r="10" fill="#ffe3cf" stroke="#f6a6cf" stroke-width="2"/>
+                            <g class="sparkle">
+                                <circle cx="22" cy="20" r="3" fill="#ffd6ea"/>
+                                <circle cx="118" cy="70" r="3" fill="#d9c6f5"/>
+                                <circle cx="70" cy="95" r="3" fill="#c9f2e2"/>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <p:messages showDetail="true" skipDetailIfEqualsSummary="true">
+                        <p:autoUpdate/>
+                    </p:messages>
+                    <p:panel id="panel" header="Inicio de Sesión">
+                        <h:panelGrid columns="3" cellpadding="7">
+                            <p:outputLabel for="username" value="Usuario: "/>
+                            <p:inputText id="username" value="#{authenticationController.username}"
+                                         required="true" label="Usuario" placeholder="Nombre de usuario">
+                                <f:validateLength minimum="4"/>
+                            </p:inputText>
+                            <p:message for="username" showDetail="true" showSummary="true"/>
+
+                            <p:outputLabel for="password" value="Contraseña:"/>
+                            <p:password id="password" value="#{authenticationController.password}"
+                                        required="true" toggleMask="true" redisplay="true">
+                                <f:validateLength minimum="4" for="password"/>
+                                <p:clientValidator/>
+                            </p:password>
+                            <p:message for="password" showDetail="true" showSummary="true"/>
+                        </h:panelGrid>
+
+                        <p:commandButton value="Ingresar" action="#{authenticationController.login}"
+                                         icon="pi pi-user" validateClient="true" styleClass="mt-3"
+                                         update="@form" ajax="false"/>
+                        <p:commandButton value="Cancelar" action="index.xhtml?faces-redirect=true"
+                                         immediate="true" icon="pi pi-times" styleClass="mt-3 ui-button-secondary"/>
+
+                    </p:panel>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

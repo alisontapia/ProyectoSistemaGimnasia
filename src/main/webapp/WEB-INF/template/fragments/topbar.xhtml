@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+
+<ui:composition>
+    <style>
+        .ui-stick {
+            top: 70px !important;
+        }
+        @media(max-width: 960px) {
+            .ui-stick {
+                top: 110px !important;
+            }
+        }
+    </style>
+    <h:form>
+        <div id="panel-header" class="card">
+            <p:toolbar id="menu-tab">
+
+                <p:toolbarGroup align="left" rendered="#{!userSessionBean.authenticated}">
+                    <p:commandButton value="Inicio" icon="pi pi-home" styleClass="mr-2"
+                                     action="/index.xhtml?faces-redirect=true"/>
+                </p:toolbarGroup>
+
+                <p:toolbarGroup align="left" rendered="#{userSessionBean.hasRole('ADMINISTRADOR')}">
+                    <p:commandButton value="Inicio" icon="pi pi-home" styleClass="mr-2"
+                                     action="/dashboard.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Gimnastas" icon="pi pi-users" styleClass="mr-2"
+                                     action="/gymnast/list.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Competencias" icon="pi pi-flag" styleClass="mr-2"
+                                     action="/competition/list.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Categorías" icon="pi pi-sitemap" styleClass="mr-2"
+                                     action="/competition/categories.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Jueces" icon="pi pi-verified" styleClass="mr-2"
+                                     action="/admin/judges.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Ranking" icon="pi pi-trophy" styleClass="mr-2"
+                                     action="/judge/ranking.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Usuarios" icon="pi pi-lock" styleClass="mr-2"
+                                     action="/security/userList.xhtml?faces-redirect=true"/>
+                </p:toolbarGroup>
+
+                <p:toolbarGroup align="left" rendered="#{userSessionBean.hasRole('JUEZ')}">
+                    <p:commandButton value="Inicio" icon="pi pi-home" styleClass="mr-2"
+                                     action="/dashboard.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Calificar" icon="pi pi-pencil" styleClass="mr-2"
+                                     action="/judge/evaluate.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Mis Calificaciones" icon="pi pi-list" styleClass="mr-2"
+                                     action="/judge/myScores.xhtml?faces-redirect=true"/>
+                    <p:commandButton value="Ranking" icon="pi pi-trophy" styleClass="mr-2"
+                                     action="/judge/ranking.xhtml?faces-redirect=true"/>
+                </p:toolbarGroup>
+
+                <p:toolbarGroup align="right">
+                    <p:commandButton value="Ingresar" rendered="#{!userSessionBean.authenticated}"
+                                     action="/login.xhtml?faces-redirect=true"/>
+                    <p:menuButton value="#{userSessionBean.user.name}" icon="pi pi-user" iconPos="right"
+                                  rendered="#{userSessionBean.authenticated}">
+                        <p:menuitem value="Cerrar sesión" action="#{menuBarController.logout}"
+                                    ajax="false" icon="pi pi-times" immediate="true"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+        </div>
+    </h:form>
+</ui:composition>
+
+</html>

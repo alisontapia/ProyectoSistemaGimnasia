@@ -1,0 +1,47 @@
+<server description="defaultServer">
+    <featureManager>
+        <feature>webProfile-10.0</feature>
+    </featureManager>
+    <basicRegistry id="defaultBasicRegistry" realm="BasicRealm">
+        <user name="username" password="password" />
+    </basicRegistry>
+    <keyStore id="defaultKeyStore" password="password" />
+    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080" httpsPort="9443" />
+    <webApplication location="gimnasia-web.war" contextRoot="/gimnasia"/>
+
+        <logging
+            consoleFormat="SIMPLE"
+            consoleLogLevel="INFO"
+            messageFormat="SIMPLE"
+            messageSource="message,trace,accessLog"
+            isoDateFormat="true"
+            maxFileSize="100"
+            maxFiles="5"
+            traceSpecification="*=info:edu.unl.*=fine,eclipselink.sql=all"
+    />
+
+        <variable name="db.host"     defaultValue="localhost"        envVarName="DB_HOST"/>
+    <variable name="db.port"     defaultValue="5433"             envVarName="DB_PORT"/>
+    <variable name="db.name"     defaultValue="gimnasia"         envVarName="DB_NAME"/>
+    <variable name="db.user"     defaultValue="gimnasiauser"     envVarName="DB_USER"/>
+    <variable name="db.password" defaultValue="gimnasiaUser2626" envVarName="DB_PASSWORD"/>
+
+    <library id="postgresLib">
+        <fileset dir="${shared.resource.dir}/postgres/" include="postgresql-*.jar"/>
+    </library>
+
+    <dataSource id="gimnasiaDS"
+                jndiName="jdbc/gimnasiaDS"
+                type="javax.sql.ConnectionPoolDataSource">
+        <jdbcDriver libraryRef="postgresLib"/>
+        <properties.postgresql
+                url="jdbc:postgresql://${db.host}:${db.port}/${db.name}?stringtype=unspecified"
+                user="${db.user}"
+                password="${db.password}"/>
+        <connectionManager
+                minPoolSize="2"
+                maxPoolSize="20"
+                connectionTimeout="30s"
+                maxIdleTime="10m"/>
+    </dataSource>
+</server>

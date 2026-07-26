@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:c="jakarta.tags.core"
+      xmlns:p="primefaces">
+
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+
+        <ui:define name="title-view">
+            Calificar
+        </ui:define>
+
+        <ui:define name="content">
+
+            <h:form id="evaluateForm">
+
+                <p:growl showDetail="true"/>
+
+                <div class="page-title">
+                    <i class="pi pi-pencil"
+                       style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Calificar - #{judgeEvaluationController.currentJudge.specialty}</h3>
+                </div>
+
+                <div class="pastel-alert"
+                     style="display:#{judgeEvaluationController.hasActiveCompetition() ? 'none' : 'flex'}">
+                    <i class="pi pi-exclamation-triangle"/>
+                    <span>El administrador aún no ha seleccionado una competencia activa.</span>
+                </div>
+
+                <h:panelGroup rendered="#{judgeEvaluationController.hasActiveCompetition()}">
+
+                    <p>
+                        Competencia:
+                        <b>#{judgeEvaluationController.activeCompetition.name}</b>
+                    </p>
+
+                    <div class="pastel-alert"
+                         style="display:#{judgeEvaluationController.activeCompetitionClosed ? 'flex' : 'none'}">
+                        <i class="pi pi-lock"/>
+                        <span>
+                            El administrador cerró esta competencia:
+                            las calificaciones ya registradas quedan solo para consulta
+                            en "Mis Calificaciones".
+                        </span>
+                    </div>
+
+                    <p:dataTable var="gymnast"
+                                 value="#{judgeEvaluationController.participants}"
+                                 emptyMessage="No hay gimnastas participando en esta competencia."
+                                 rendered="#{!judgeEvaluationController.activeCompetitionClosed}">
+
+                        <p:column headerText="Gimnasta">
+                            <h:outputText value="#{gymnast.fullName}"/>
+                        </p:column>
+
+                        <p:column headerText="Edad">
+                            <h:outputText value="#{gymnast.age}"/>
+                        </p:column>
+
+                        <p:column headerText="Estado" style="width:130px">
+
+                            <p:tag value="Ya calificada"
+                                   severity="info"
+                                   rendered="#{judgeEvaluationController.isAlreadyEvaluated(gymnast)}"/>
+
+                            <p:tag value="Pendiente"
+                                   severity="warning"
+                                   rendered="#{!judgeEvaluationController.isAlreadyEvaluated(gymnast)}"/>
+
+                        </p:column>
+
+                        <p:column headerText="Acción" style="width:160px">
+
+                            <p:commandButton
+                                    value="#{judgeEvaluationController.isAlreadyEvaluated(gymnast) ? 'Editar' : 'Calificar'}"
+                                    icon="#{judgeEvaluationController.isAlreadyEvaluated(gymnast) ? 'pi pi-refresh' : 'pi pi-star'}"
+                                    actionListener="#{judgeEvaluationController.handleCalificarClick(gymnast)}"
+                                    process="@this"
+                                    update=":evaluateForm:confirmReEvaluateDialog :evaluateForm:evaluateDialog"
+                                    oncomplete="if (args.alreadyEvaluated) { PF('confirmReEvaluateDialog').show(); } else { PF('evaluateDialog').show(); }"/>
+
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:confirmDialog id="confirmReEvaluateDialog"
+                                     widgetVar="confirmReEvaluateDialog"
+                                     header="Ya existe una calificación"
+                                     width="420"
+                                     icon="pi pi-question-circle"
+                                     message="Ya calificaste a #{judgeEvaluationController.pendingGymnast.fullName} en esta competencia. Deseas editar la calificación registrada?">
+
+                        <h:panelGrid columns="2">
+
+                            <p:commandButton
+                                    value="Sí, editar aquí"
+                                    icon="pi pi-check"
+                                    action="#{judgeEvaluationController.confirmReEvaluate}"
+                                    process="@this"
+                                    update=":evaluateForm:evaluateDialog"
+                                    oncomplete="PF('confirmReEvaluateDialog').hide(); PF('evaluateDialog').show();"/>
+
+                            <p:commandButton
+                                    value="Ir a Mis Calificaciones"
+                                    icon="pi pi-list"
+                                    styleClass="ui-button-secondary"
+                                    immediate="true"
+                                    action="/judge/myScores.xhtml?faces-redirect=true"/>
+
+                        </h:panelGrid>
+
+                    </p:confirmDialog>
+
+                    <p:dialog id="evaluateDialog"
+                              widgetVar="evaluateDialog"
+                              header="Calificar a #{judgeEvaluationController.selectedGymnast.fullName}"
+                              modal="true"
+                              responsive="true"
+                              width="480">
+
+                        <div class="pastel-alert"
+                             style="display:#{judgeEvaluationController.reopenedExisting ? 'flex' : 'none'}">
+
+                            <i class="pi pi-info-circle"/>
+
+                            <span>
+                                Ya existía una calificación registrada para esta gimnasta:
+                                Se cargaron los valores actuales, puedes modificarlos y
+                                guardar para actualizarla.
+                            </span>
+
+                        </div>
+
+                        <p style="color:gray">
+
+                            Especialidad
+                            <b>#{judgeEvaluationController.currentJudge.specialty}</b>:
+
+                            <h:outputText
+                                    value=" Ingrese todas las penalizaciones (0.0 - 1.0)"
+                                    rendered="#{judgeEvaluationController.penaltySpecialty}"/>
+
+                            <h:outputText
+                                    value=" Ingrese todos los puntajes (0.0 - 1.0)"
+                                    rendered="#{!judgeEvaluationController.penaltySpecialty}"/>
+
+                        </p>
+
+                        <h:panelGrid columns="2" cellpadding="6">
+
+                            <c:forEach items="#{judgeEvaluationController.currentJudge.specialtyCriteria}"
+                                       var="criterion">
+
+                                <p:outputLabel value="#{criterion}:"/>
+
+                                <p:inputNumber
+                                        value="#{judgeEvaluationController.scores[criterion]}"
+                                        decimalPlaces="2"
+                                        minValue="0"
+                                        maxValue="1">
+
+                                    <f:converter converterId="jakarta.faces.Double"/>
+
+                                </p:inputNumber>
+
+                            </c:forEach>
+
+                        </h:panelGrid>
+
+                        <h:panelGroup rendered="#{judgeEvaluationController.judgeTotal != null}">
+
+                            <p>
+
+                                <b>
+                                    Total #{judgeEvaluationController.currentJudge.specialty}:
+                                </b>
+
+                                <h:outputText value="#{judgeEvaluationController.judgeTotal}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+
+                            </p>
+
+                        </h:panelGroup>
+
+                        <f:facet name="footer">
+
+                            <p:commandButton
+                                    value="Guardar calificación"
+                                    icon="pi pi-check"
+                                    action="#{judgeEvaluationController.saveScores}"
+                                    update=":evaluateForm"
+                                    oncomplete="if (!args.validationFailed) { PF('evaluateDialog').hide(); }"/>
+
+                            <p:commandButton
+                                    value="Cerrar"
+                                    icon="pi pi-times"
+                                    immediate="true"
+                                    onclick="PF('evaluateDialog').hide()"
+                                    styleClass="ui-button-secondary"/>
+
+                        </f:facet>
+
+                    </p:dialog>
+
+                </h:panelGroup>
+
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+
+    <ui:composition template="WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">
+            Sistema de Gimnasia Rítmica - Inicio
+        </ui:define>
+        <ui:define name="content">
+            <h:form>
+                <div class="card">
+                    <p:growl id="growl-redirect" globalOnly="false" showDetail="true" keepAlive="true"/>
+                    <p:panel>
+                        <div style="text-align:center; padding: .5rem 0 1rem 0;">
+                            <svg class="hero-illustration floating" viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="130" cy="200" rx="90" ry="12" fill="#f3e9ff"/>
+                                <path d="M40 60 C 90 10, 170 10, 220 55 C 200 40, 170 45, 150 65"
+                                      stroke="#f6a6cf" stroke-width="4" fill="none" stroke-linecap="round"/>
+                                <path d="M60 90 C 30 70, 15 40, 25 15 C 35 40, 55 55, 80 65"
+                                      stroke="#b18fe0" stroke-width="4" fill="none" stroke-linecap="round"/>
+                                <circle cx="128" cy="70" r="16" fill="#ffe3cf"/>
+                                <path d="M128 86 C 110 100, 100 130, 108 160" stroke="#b18fe0" stroke-width="10" fill="none" stroke-linecap="round"/>
+                                <path d="M128 86 C 150 100, 160 60, 150 45" stroke="#f6a6cf" stroke-width="9" fill="none" stroke-linecap="round"/>
+                                <path d="M118 150 L 100 190" stroke="#5b4b72" stroke-width="9" fill="none" stroke-linecap="round"/>
+                                <path d="M112 150 L 140 188" stroke="#5b4b72" stroke-width="9" fill="none" stroke-linecap="round"/>
+                                <path d="M126 92 L 90 110" stroke="#5b4b72" stroke-width="8" fill="none" stroke-linecap="round"/>
+                                <path d="M132 92 L 165 78" stroke="#5b4b72" stroke-width="8" fill="none" stroke-linecap="round"/>
+                                <g class="sparkle">
+                                    <circle cx="205" cy="30" r="4" fill="#ffd6ea"/>
+                                    <circle cx="45" cy="100" r="3" fill="#d9c6f5"/>
+                                    <circle cx="220" cy="120" r="3" fill="#c9f2e2"/>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <div class="page-title" style="justify-content:center;">
+                            <i class="pi pi-heart-fill" style="font-size: 1.5rem; color:#f6a6cf"/>
+                            <h3>Bienvenido/a al Sistema de Calificación de Gimnasia Rítmica</h3>
+                        </div>
+
+                        <p style="text-align:center; color:#8577a0;">Todo lo que necesitas para organizar tus competencias, en un solo lugar:</p>
+
+                        <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin: 1.5rem 0;">
+                            <div style="text-align:center; width:150px;">
+                                <div class="icon-badge"><i class="pi pi-users"/></div>
+                                <h5>Gimnastas</h5>
+                            </div>
+                            <div style="text-align:center; width:150px;">
+                                <div class="icon-badge"><i class="pi pi-flag"/></div>
+                                <h5>Competencias</h5>
+                            </div>
+                            <div style="text-align:center; width:150px;">
+                                <div class="icon-badge"><i class="pi pi-star"/></div>
+                                <h5>Calificación</h5>
+                            </div>
+                            <div style="text-align:center; width:150px;">
+                                <div class="icon-badge"><i class="pi pi-trophy"/></div>
+                                <h5>Ranking</h5>
+                            </div>
+                        </div>
+
+                        <div style="text-align:center;">
+                            <p:commandButton value="Iniciar sesión" icon="pi pi-sign-in"
+                                             action="/login.xhtml?faces-redirect=true"/>
+                        </div>
+                    </p:panel>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

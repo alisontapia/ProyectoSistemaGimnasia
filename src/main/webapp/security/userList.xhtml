@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">Administración de usuarios</ui:define>
+        <ui:define name="content">
+            <h:form id="userForm">
+                <p:growl showDetail="true"/>
+                <div class="page-title">
+                    <i class="pi pi-lock" style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Cuentas de usuario</h3>
+                </div>
+
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton value="Nueva cuenta" icon="pi pi-user-plus"
+                                         actionListener="#{userAdminController.openNew}" process="@this"
+                                         oncomplete="PF('userDialog').show()" update=":userForm:userDialog"/>
+                    </f:facet>
+                    <f:facet name="right">
+                        <p:inputText id="criteria" value="#{userAdminController.criteria}"
+                                     placeholder="Buscar por usuario.." style="margin-right:.5rem"/>
+                        <p:commandButton icon="pi pi-search" styleClass="ui-button-success"
+                                         action="#{userAdminController.search()}" update=":userForm" process="@this criteria"
+                                         style="margin-right:.5rem" title="Buscar"/>
+                        <p:commandButton icon="pi pi-refresh" styleClass="ui-button-danger"
+                                         action="#{userAdminController.reset()}" update=":userForm" process="@this"
+                                         title="Limpiar"/>
+                    </f:facet>
+                </p:toolbar>
+
+                <p:dataTable id="userTable" var="_user" value="#{userAdminController.users}"
+                             emptyMessage="No existen cuentas registradas." paginator="true" rows="10"
+                             styleClass="mt-3">
+                    <p:column headerText="Usuario">
+                        <h:outputText value="#{_user.username}"/>
+                    </p:column>
+                    <p:column headerText="Rol">
+                        <p:tag value="#{userAdminController.roleNamesOf(_user)}"/>
+                    </p:column>
+                    <p:column headerText="Entidad propietaria">
+                        <h:outputText value="#{userAdminController.ownerName(_user)}"/>
+                    </p:column>
+                    <p:column headerText="Acciones" style="width:100px;text-align:center">
+                        <p:commandButton icon="pi pi-pencil" styleClass="rounded-button ui-button-secondary"
+                                         actionListener="#{userAdminController.openEdit(_user)}" process="@this"
+                                         oncomplete="PF('userDialog').show()" update=":userForm:userDialog"/>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog header="Cuenta de usuario" widgetVar="userDialog" id="userDialog" modal="true"
+                          responsive="true" width="460">
+                    <h:panelGrid columns="2" cellpadding="6">
+                        <p:outputLabel for="role" value="Rol:"/>
+                        <p:selectOneMenu id="role" value="#{userAdminController.roleName}" required="true"
+                                          disabled="#{userAdminController.editing}">
+                            <f:selectItem itemLabel="-- Seleccione --" noSelectionOption="true"/>
+                            <f:selectItems value="#{userAdminController.availableRoles}" var="_role"
+                                           itemLabel="#{_role.name}" itemValue="#{_role.name}"/>
+                            <p:ajax update="personalDataFields" process="@this"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="username" value="Usuario:"/>
+                        <p:inputText id="username" value="#{userAdminController.username}" required="true"/>
+
+                        <p:outputLabel for="password" value="Contraseña:"/>
+                        <p:password id="password" value="#{userAdminController.password}"
+                                    toggleMask="true" redisplay="true"
+                                    required="#{!userAdminController.editing}"
+                                    placeholder="#{userAdminController.editing ? 'Dejar en blanco para no cambiarla' : ''}">
+                            <f:validateLength minimum="4" for="password"/>
+                        </p:password>
+                    </h:panelGrid>
+
+                    <h:panelGroup id="personalDataFields">
+                        <h:panelGrid columns="2" cellpadding="6" rendered="#{userAdminController.judgeRoleSelected}">
+                            <p:outputLabel for="judgeId" value="Juez:"/>
+                            <p:selectOneMenu id="judgeId" value="#{userAdminController.judgeId}"
+                                             required="#{!userAdminController.editing}"
+                                             disabled="#{userAdminController.editing}">
+                                <f:selectItem itemLabel="-- Seleccione un juez ya registrado --" noSelectionOption="true"/>
+                                <f:selectItems value="#{userAdminController.availableJudgesWithoutAccount}" var="_judge"
+                                               itemLabel="#{_judge.fullName} (#{_judge.nationalId}) - #{_judge.specialty}"
+                                               itemValue="#{_judge.id}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Si el juez que buscas no aparece, primero registralo en 'Gestión de Jueces'."
+                                          rendered="#{!userAdminController.editing and empty userAdminController.availableJudgesWithoutAccount}"
+                                          style="color:var(--pastel-purple-strong);grid-column:span 2"/>
+                        </h:panelGrid>
+                    </h:panelGroup>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         action="#{userAdminController.save}"
+                                         update=":userForm" oncomplete="if(!args.validationFailed){PF('userDialog').hide();}"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" immediate="true"
+                                         onclick="PF('userDialog').hide()" styleClass="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

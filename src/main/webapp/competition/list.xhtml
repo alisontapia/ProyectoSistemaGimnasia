@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">Competencias</ui:define>
+        <ui:define name="content">
+            <h:form id="competitionForm">
+                <p:growl showDetail="true"/>
+                <div class="page-title">
+                    <i class="pi pi-flag" style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Competencias</h3>
+                </div>
+
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton value="Nueva competencia" icon="pi pi-plus"
+                                         actionListener="#{competitionController.openNew}" process="@this"
+                                         oncomplete="PF('competitionDialog').show()"
+                                         update=":competitionForm:competitionDialog"/>
+                    </f:facet>
+                </p:toolbar>
+
+                <p:dataTable var="competition" value="#{competitionController.competitions}"
+                             emptyMessage="No hay competencias registradas." paginator="true" rows="10"
+                             styleClass="mt-3">
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{competition.name}"/>
+                    </p:column>
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{competition.formattedDate}"/>
+                    </p:column>
+                    <p:column headerText="Ubicacion">
+                        <h:outputText value="#{competition.location}"/>
+                    </p:column>
+                    <p:column headerText="Jueces asignados">
+                        <h:outputText value="#{competition.assignedJudges.size()}"/>
+                    </p:column>
+                    <p:column headerText="Estado" style="width:220px">
+
+                        <p:tag value="Activa" severity="success" rendered="#{competitionController.isActive(competition)}"/>
+                        <p:tag value="Cerrada (solo consulta)" severity="danger" rendered="#{competition.closed}"/>
+                        <p:tag value="Abierta" severity="info" rendered="#{!competition.closed}"/>
+                        <br/>
+                        <p:commandButton value="Activar" icon="pi pi-play" styleClass="ui-button-outlined mt-2"
+                                         rendered="#{!competitionController.isActive(competition) and !competition.closed}"
+                                         actionListener="#{competitionController.selectForActivation(competition)}" process="@this"
+                                         oncomplete="PF('confirmActivateDialog').show()"/>
+                    </p:column>
+                    <p:column headerText="Calificaciones" style="width:200px">
+                        <p:commandButton value="Cerrar" icon="pi pi-lock" styleClass="ui-button-outlined ui-button-danger"
+                                         rendered="#{!competition.closed}"
+                                         actionListener="#{competitionController.selectForClosing(competition)}" process="@this"
+                                         oncomplete="PF('confirmCloseDialog').show()"/>
+                        <p:commandButton value="Reabrir" icon="pi pi-lock-open" styleClass="ui-button-outlined"
+                                         rendered="#{competition.closed}"
+                                         action="#{competitionController.reopen(competition)}" process="@this"
+                                         update=":competitionForm"/>
+                    </p:column>
+                    <p:column headerText="Acción" style="width:110px">
+                        <p:commandButton icon="pi pi-pencil" styleClass="ui-button-outlined" title="Editar"
+                                         actionListener="#{competitionController.openEdit(competition)}" process="@this"
+                                         oncomplete="PF('competitionDialog').show()"
+                                         update=":competitionForm:competitionDialog"/>
+                    </p:column>
+                </p:dataTable>
+
+                <p:confirmDialog widgetVar="confirmActivateDialog" header="Confirmar activación" width="360"
+                                 message="Al activar esta competencia, los jueces verán sus gimnastas y podrán calificar aquí. Deseas continuar?"
+                                 icon="pi pi-question-circle">
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Si, activar" icon="pi pi-check" process="@this"
+                                         action="#{competitionController.confirmActivate}"
+                                         oncomplete="PF('confirmActivateDialog').hide()" update=":competitionForm"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" styleClass="ui-button-secondary"
+                                         onclick="PF('confirmActivateDialog').hide()" type="button"/>
+                    </h:panelGrid>
+                </p:confirmDialog>
+
+                <p:confirmDialog widgetVar="confirmCloseDialog" header="Confirmar cierre" width="400"
+                                 icon="pi pi-exclamation-triangle"
+                                 message="#{competitionController.closingConfirmationMessage}">
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Si, cerrar" icon="pi pi-check" styleClass="ui-button-danger" process="@this"
+                                         action="#{competitionController.confirmClose}"
+                                         oncomplete="PF('confirmCloseDialog').hide()" update=":competitionForm"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" styleClass="ui-button-secondary"
+                                         onclick="PF('confirmCloseDialog').hide()" type="button"/>
+                    </h:panelGrid>
+                </p:confirmDialog>
+
+                <p:dialog header="#{competitionController.editing ? 'Editar competencia' : 'Nueva competencia'}"
+                          widgetVar="competitionDialog" id="competitionDialog"
+                          modal="true" responsive="true" width="480">
+                    <h:panelGrid columns="2" cellpadding="6">
+                        <p:outputLabel for="cname" value="Nombre:"/>
+                        <p:inputText id="cname" value="#{competitionController.name}" required="true"/>
+
+                        <p:outputLabel for="cdate" value="Fecha:"/>
+                        <p:calendar id="cdate" value="#{competitionController.date}" pattern="dd/MM/yyyy" required="true"/>
+
+                        <p:outputLabel for="clocation" value="Ubicacion:"/>
+                        <p:inputText id="clocation" value="#{competitionController.location}" required="true"/>
+                    </h:panelGrid>
+
+                    <h:outputText value="Panel de jueces (uno por especialidad):"
+                                  style="font-weight:bold; display:block; margin-top:1rem;"/>
+                    <h:panelGrid columns="2" cellpadding="6">
+                        <p:outputLabel for="difficultyJudge" value="Dificultad:"/>
+                        <p:selectOneMenu id="difficultyJudge" value="#{competitionController.difficultyJudgeId}" required="true">
+                            <f:converter converterId="jakarta.faces.Long"/>
+                            <f:selectItem itemLabel="-- Seleccione --" noSelectionOption="true"/>
+                            <f:selectItems value="#{competitionController.difficultyJudges}" var="j"
+                                           itemLabel="#{j.fullName}" itemValue="#{j.id}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="executionJudge" value="Ejecución:"/>
+                        <p:selectOneMenu id="executionJudge" value="#{competitionController.executionJudgeId}" required="true">
+                            <f:converter converterId="jakarta.faces.Long"/>
+                            <f:selectItem itemLabel="-- Seleccione --" noSelectionOption="true"/>
+                            <f:selectItems value="#{competitionController.executionJudges}" var="j"
+                                           itemLabel="#{j.fullName}" itemValue="#{j.id}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="artisticJudge" value="Artístico:"/>
+                        <p:selectOneMenu id="artisticJudge" value="#{competitionController.artisticJudgeId}" required="true">
+                            <f:converter converterId="jakarta.faces.Long"/>
+                            <f:selectItem itemLabel="-- Seleccione --" noSelectionOption="true"/>
+                            <f:selectItems value="#{competitionController.artisticJudges}" var="j"
+                                           itemLabel="#{j.fullName}" itemValue="#{j.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="#{competitionController.editing ? 'Guardar cambios' : 'Guardar'}"
+                                         icon="pi pi-check" action="#{competitionController.save}"
+                                         update=":competitionForm"
+                                         oncomplete="if(!args.validationFailed){PF('competitionDialog').hide();}"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" immediate="true"
+                                         onclick="PF('competitionDialog').hide()" styleClass="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

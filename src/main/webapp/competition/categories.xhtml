@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">Categorías</ui:define>
+        <ui:define name="content">
+            <h:form id="categoryForm">
+                <p:growl showDetail="true"/>
+                <div class="page-title">
+                    <i class="pi pi-sitemap" style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Categorías</h3>
+                </div>
+
+                <div class="pastel-alert" style="display:#{categoryController.hasActiveCompetition() ? 'none' : 'flex'}">
+                    <i class="pi pi-exclamation-triangle"/>
+                    <span>Seleccione una competencia activa en la sección Competencias antes de crear categorías.</span>
+                </div>
+
+                <h:panelGroup rendered="#{categoryController.hasActiveCompetition()}">
+                    <p:panel header="Competencia activa: #{categoryController.activeCompetition.name}">
+
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid">
+                            <p:panel header="Nueva categoría">
+                                <h:panelGrid columns="2" cellpadding="6">
+                                    <p:outputLabel for="catName" value="Nombre:"/>
+                                    <p:inputText id="catName" value="#{categoryController.name}" required="true"/>
+
+                                    <p:outputLabel for="catLevel" value="Nivel:"/>
+                                    <p:inputText id="catLevel" value="#{categoryController.level}" required="true"/>
+
+                                    <p:outputLabel for="catMin" value="Edad mínima:"/>
+                                    <p:inputNumber id="catMin" value="#{categoryController.minimumAge}" decimalPlaces="0" required="true"/>
+
+                                    <p:outputLabel for="catMax" value="Edad máxima:"/>
+                                    <p:inputNumber id="catMax" value="#{categoryController.maximumAge}" decimalPlaces="0" required="true"/>
+                                </h:panelGrid>
+                                <p:commandButton value="Crear categoría" icon="pi pi-plus"
+                                                 action="#{categoryController.createCategory}" process="@this catName catLevel catMin catMax"
+                                                 update=":categoryForm" styleClass="mt-2"/>
+                            </p:panel>
+
+                            <p:panel header="Asignar gimnasta a categoría">
+                                <h:panelGrid columns="2" cellpadding="6">
+                                    <p:outputLabel for="selGymnast" value="Gimnasta:"/>
+                                    <p:selectOneMenu id="selGymnast" value="#{categoryController.selectedGymnastId}">
+                                        <f:converter converterId="jakarta.faces.Long"/>
+                                        <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                                        <f:selectItems value="#{categoryController.allGymnasts}" var="g"
+                                                       itemLabel="#{g.fullName} (#{g.age} años)" itemValue="#{g.id}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="selCategory" value="Categoría:"/>
+                                    <p:selectOneMenu id="selCategory" value="#{categoryController.selectedCategoryId}">
+                                        <f:converter converterId="jakarta.faces.Long"/>
+                                        <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                                        <f:selectItems value="#{categoryController.categories}" var="c"
+                                                       itemLabel="#{c.name} (#{c.minimumAge}-#{c.maximumAge} años)" itemValue="#{c.id}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <p:commandButton value="Asignar" icon="pi pi-link"
+                                                 action="#{categoryController.assignGymnast}" process="@this selGymnast selCategory"
+                                                 update=":categoryForm" styleClass="mt-2"/>
+                            </p:panel>
+                        </p:panelGrid>
+
+                        <p:dataTable var="category" value="#{categoryController.categories}" styleClass="mt-3"
+                                     emptyMessage="No hay categorías creadas para esta competencia.">
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{category.name}"/>
+                            </p:column>
+                            <p:column headerText="Nivel">
+                                <h:outputText value="#{category.level}"/>
+                            </p:column>
+                            <p:column headerText="Rango de edad">
+                                <h:outputText value="#{category.minimumAge} - #{category.maximumAge} años"/>
+                            </p:column>
+                            <p:column headerText="Gimnastas asignadas">
+                                <h:outputText value="#{category.gymnasts.size()}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </h:panelGroup>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

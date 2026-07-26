@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="/WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">Gimnastas</ui:define>
+        <ui:define name="content">
+            <h:form id="gymnastForm">
+                <p:growl showDetail="true"/>
+                <div class="page-title">
+                    <i class="pi pi-users" style="font-size:1.5rem;color:var(--pastel-purple-strong)"/>
+                    <h3>Gimnastas registradas</h3>
+                </div>
+
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton value="Registrar gimnasta" icon="pi pi-plus"
+                                         actionListener="#{gymnastController.openNew}"
+                                         oncomplete="PF('gymnastDialog').show()" update=":gymnastForm:gymnastDialog"/>
+                    </f:facet>
+                </p:toolbar>
+
+                <p:dataTable id="gymnastTable" var="gymnast" value="#{gymnastController.gymnasts}"
+                             emptyMessage="No hay gimnastas registradas." paginator="true" rows="10"
+                             styleClass="mt-3">
+                    <p:column headerText="Cédula">
+                        <h:outputText value="#{gymnast.nationalId}"/>
+                    </p:column>
+                    <p:column headerText="Nombres">
+                        <h:outputText value="#{gymnast.firstName}"/>
+                    </p:column>
+                    <p:column headerText="Apellidos">
+                        <h:outputText value="#{gymnast.lastName}"/>
+                    </p:column>
+                    <p:column headerText="Fecha de nacimiento">
+                        <h:outputText value="#{gymnast.formattedBirthDate}"/>
+                    </p:column>
+                    <p:column headerText="Edad">
+                        <h:outputText value="#{gymnast.age}"/>
+                    </p:column>
+                    <p:column headerText="Acciones" style="width:100px;text-align:center">
+                        <p:commandButton icon="pi pi-pencil" styleClass="rounded-button ui-button-secondary"
+                                         actionListener="#{gymnastController.openEdit(gymnast)}"
+                                         oncomplete="PF('gymnastDialog').show()" update=":gymnastForm:gymnastDialog"
+                                         process="@this"/>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog header="Gimnasta" widgetVar="gymnastDialog" id="gymnastDialog" modal="true"
+                          responsive="true" width="420">
+                    <h:panelGrid columns="2" cellpadding="6">
+                        <p:outputLabel for="nationalId" value="Cedula:"/>
+                        <p:inputText id="nationalId" value="#{gymnastController.nationalId}"
+                                     disabled="#{gymnastController.editing}" required="true">
+                            <f:validator validatorId="cedulaEcuatorianaValidator"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="firstName" value="Nombres:"/>
+                        <p:inputText id="firstName" value="#{gymnastController.firstName}" required="true"/>
+
+                        <p:outputLabel for="lastName" value="Apellidos:"/>
+                        <p:inputText id="lastName" value="#{gymnastController.lastName}" required="true"/>
+
+                        <p:outputLabel for="birthDate" value="Fecha de nacimiento:"/>
+                        <p:calendar id="birthDate" value="#{gymnastController.birthDate}" pattern="dd/MM/yyyy"
+                                    required="true" navigator="true" yearRange="c-40:c"/>
+                    </h:panelGrid>
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         action="#{gymnastController.save}"
+                                         update=":gymnastForm" oncomplete="if(!args.validationFailed){PF('gymnastDialog').hide();}"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" immediate="true"
+                                         onclick="PF('gymnastDialog').hide()" styleClass="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

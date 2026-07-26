@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="primefaces">
+    <ui:composition template="WEB-INF/template/base.xhtml">
+        <ui:define name="title-view">
+            Sistema de Gimnasia Rítmica - Panel
+        </ui:define>
+        <ui:define name="content">
+            <h:form>
+                <p:growl showDetail="true"/>
+                <div class="page-title">
+                    <i class="pi pi-th-large" style="font-size: 1.5rem; color:var(--pastel-purple-strong)"/>
+                    <h3>Panel de #{userSessionBean.user.name}</h3>
+                </div>
+
+                <div class="p-grid" style="display:flex; flex-wrap:wrap; gap:1rem;">
+
+                    <p:card rendered="#{userSessionBean.hasRole('ADMINISTRADOR')}"
+                            style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Gimnastas</f:facet>
+                        <div class="icon-badge"><i class="pi pi-users"/></div>
+                        <p:commandButton value="Gestionar" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/gymnast/list.xhtml?faces-redirect=true"/>
+                    </p:card>
+
+                    <p:card rendered="#{userSessionBean.hasRole('ADMINISTRADOR')}"
+                            style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Competencias</f:facet>
+                        <div class="icon-badge"><i class="pi pi-flag"/></div>
+                        <p:commandButton value="Gestionar" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/competition/list.xhtml?faces-redirect=true"/>
+                    </p:card>
+
+                    <p:card rendered="#{userSessionBean.hasRole('ADMINISTRADOR')}"
+                            style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Categorías</f:facet>
+                        <div class="icon-badge"><i class="pi pi-sitemap"/></div>
+                        <p:commandButton value="Gestionar" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/competition/categories.xhtml?faces-redirect=true"/>
+                    </p:card>
+
+                    <p:card rendered="#{userSessionBean.hasRole('ADMINISTRADOR')}"
+                            style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Jueces</f:facet>
+                        <div class="icon-badge"><i class="pi pi-verified"/></div>
+                        <p:commandButton value="Gestionar" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/admin/judges.xhtml?faces-redirect=true"/>
+                    </p:card>
+
+                    <p:card rendered="#{userSessionBean.hasRole('ADMINISTRADOR')}"
+                            style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Usuarios</f:facet>
+                        <div class="icon-badge"><i class="pi pi-lock"/></div>
+                        <p:commandButton value="Administrar" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/security/userList.xhtml?faces-redirect=true"/>
+                    </p:card>
+
+                    <p:card rendered="#{userSessionBean.hasRole('JUEZ')}"
+                            style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Calificar</f:facet>
+                        <div class="icon-badge"><i class="pi pi-pencil"/></div>
+                        <p:commandButton value="Ir a calificar" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/judge/evaluate.xhtml?faces-redirect=true"/>
+                        </p:card>
+
+                    <p:card rendered="#{userSessionBean.hasRole('JUEZ')}"
+                            style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Mis Calificaciones</f:facet>
+                        <div class="icon-badge"><i class="pi pi-list"/></div>
+                        <p:commandButton value="Ver" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/judge/myScores.xhtml?faces-redirect=true"/>
+                    </p:card>
+
+                    <p:card style="width:220px" styleClass="metric-card">
+                        <f:facet name="title">Ranking</f:facet>
+                        <div class="icon-badge"><i class="pi pi-trophy"/></div>
+                        <p:commandButton value="Consultar" icon="pi pi-arrow-right" styleClass="mt-3"
+                                         action="/judge/ranking.xhtml?faces-redirect=true"/>
+                    </p:card>
+
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
