@@ -3,7 +3,7 @@ package edu.unl.ec.gimnasia.exception;
 public class CredentialInvalidException extends Exception {
 
     public CredentialInvalidException() {
-        super("Credenciales invalidas");
+        super(" Credenciales inválidas ");
     }
 
     public CredentialInvalidException(String message) {
