@@ -71,12 +71,12 @@ public class CompetitionFacade implements Serializable {
             throws EntityNotFoundException, InvalidJudgeAssignmentException {
         if (judgeId == null) {
             throw new InvalidJudgeAssignmentException(
-                    "Debe asignar un juez de " + expectedSpecialty + " a la competencia.");
+                    " Debe asignar un juez de " + expectedSpecialty + " a la competencia ");
         }
         Judge judge = judgeRepository.find(judgeId);
         if (judge.getSpecialty() != expectedSpecialty) {
             throw new InvalidJudgeAssignmentException(
-                    "El juez " + judge.getFullName() + " es de " + judge.getSpecialty()
+                    " El juez " + judge.getFullName() + " es de " + judge.getSpecialty()
                             + " y no puede ocupar el cupo de " + expectedSpecialty + ".");
         }
         return judge;
@@ -90,7 +90,7 @@ public class CompetitionFacade implements Serializable {
     public Competition findActive() throws EntityNotFoundException {
         Competition active = administratorRepository.getSystemAdmin().getActiveCompetition();
         if (active == null) {
-            throw new EntityNotFoundException("No hay ninguna competencia activa seleccionada.");
+            throw new EntityNotFoundException(" No hay ninguna competencia activa seleccionada ");
         }
         return active;
     }
@@ -131,10 +131,10 @@ public class CompetitionFacade implements Serializable {
             throws EntityNotFoundException, InvalidAgeException {
         Competition competition = competitionRepository.find(competitionId);
         if (minimumAge <= 0 || maximumAge <= 0) {
-            throw new InvalidAgeException("La edad mínima y la edad máxima deben ser mayores a 0.");
+            throw new InvalidAgeException(" La edad mínima y la edad máxima deben ser mayores a 0 ");
         }
         if (minimumAge > maximumAge) {
-            throw new InvalidAgeException("La edad mínima no puede ser mayor a la edad máxima.");
+            throw new InvalidAgeException(" La edad mínima no puede ser mayor a la edad máxima ");
         }
         Category category = new Category(null, name, level, minimumAge, maximumAge);
         competition.addCategory(category);
@@ -148,13 +148,13 @@ public class CompetitionFacade implements Serializable {
         Category category = competition.getCategories().stream()
                 .filter(c -> c.getId().equals(categoryId))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada con id [" + categoryId + "]"));
+                .orElseThrow(() -> new EntityNotFoundException(" Categoría no encontrada con id [" + categoryId + "]"));
 
         boolean assigned = competition.addGymnastToCategory(gymnast, category);
         if (!assigned) {
-            throw new InvalidAgeException("La edad de " + gymnast.getFullName() + " (" + gymnast.getAge()
+            throw new InvalidAgeException(" La edad de " + gymnast.getFullName() + " (" + gymnast.getAge()
                     + " años) no corresponde al rango " + category.getMinimumAge() + "-"
-                    + category.getMaximumAge() + " de la categoría " + category.getName() + ".");
+                    + category.getMaximumAge() + " de la categoría " + category.getName() );
         }
     }
 }

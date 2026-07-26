@@ -25,7 +25,7 @@ public class CompetitionRepository implements Serializable {
     public Competition find(Long id) throws EntityNotFoundException {
         Competition competition = crudService.find(Competition.class, id);
         if (competition == null) {
-            throw new EntityNotFoundException("Competencia no encontrada con id [" + id + "]");
+            throw new EntityNotFoundException(" Competencia no encontrada con id [" + id + "] ");
         }
         return competition;
     }
