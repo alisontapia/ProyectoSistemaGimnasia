@@ -71,7 +71,7 @@ public class Competition implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "gymnast_id"))
     private final List<Gymnast> participatingGymnasts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany( mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true )
     private final List<Result> results = new ArrayList<>();
 
     public Competition() {
@@ -193,7 +193,7 @@ public class Competition implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals( Object o ) {
         if (o == null || getClass() != o.getClass()) return false;
         Competition that = (Competition) o;
         return Objects.equals(id, that.id);
