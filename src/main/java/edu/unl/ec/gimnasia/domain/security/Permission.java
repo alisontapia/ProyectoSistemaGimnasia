@@ -15,6 +15,17 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Representa un permiso de acceso dentro del sistema.
+ *
+ * Un permiso define qué acción puede realizarse sobre
+ * un recurso específico, como una página o funcionalidad.
+ *
+ * Los permisos son asignados a roles y utilizados por el
+ * módulo de seguridad para controlar el acceso de los usuarios
+ * a las distintas opciones del sistema.
+ */
+
 @Entity
 @Table(name = "permission")
 @NamedQuery(name = "Permission.findAll", query = "SELECT p FROM Permission p ORDER BY p.id")
