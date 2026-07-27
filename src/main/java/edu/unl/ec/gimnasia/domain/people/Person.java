@@ -15,6 +15,22 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Clase abstracta que representa una persona dentro del sistema.
+ *
+ * Define los atributos y comportamientos comunes compartidos por
+ * las entidades Gymnast, Judge y Administrator, evitando la
+ * duplicación de código mediante el uso de herencia.
+ *
+ * Esta entidad almacena la información básica de identificación,
+ * incluyendo cédula, nombres y apellidos, además de proporcionar
+ * métodos de acceso, validación y comparación entre objetos.
+ *
+ * La estrategia de herencia JOINED permite que cada subclase
+ * mantenga sus atributos específicos en tablas independientes,
+ * conservando una estructura normalizada en la base de datos.
+ */
+
 @Entity
 @Table(name = "person")
 @Inheritance(strategy = InheritanceType.JOINED)
