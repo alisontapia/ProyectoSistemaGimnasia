@@ -22,6 +22,15 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Representa una gimnasta dentro del sistema.
+ *
+ * Esta entidad hereda de Person para reutilizar los atributos y
+ * comportamientos comunes de una persona, como identificación,
+ * nombres y apellidos. Además, incorpora información específica
+ * de las gimnastas, como fecha de nacimiento, categorías,
+ * competiciones, evaluaciones y resultados obtenidos.
+ */
 
 @Entity
 @Table(name = "gymnast")
