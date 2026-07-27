@@ -14,8 +14,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.faces.context.FacesContext;
-import java.io.IOException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,16 +58,6 @@ public class JudgeMyScoresController implements Serializable {
         }
     }
 
-    private void redirectToLogin() {
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            String contextPath = facesContext.getExternalContext().getRequestContextPath();
-            facesContext.getExternalContext().redirect(contextPath + "/login.xhtml");
-            facesContext.responseComplete();
-        } catch (IOException e) {
-            FacesUtil.addErrorMessage("Error", "No se pudo redirigir al login");
-        }
-    }
 
     private void reload() {
         List<Evaluation> raw = evaluationFacade.findByJudge(currentJudge.getId());
