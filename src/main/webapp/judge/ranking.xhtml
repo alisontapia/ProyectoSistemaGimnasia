@@ -49,7 +49,8 @@
                         <p:dataTable var="result" value="#{rankingController.ranking}"
                                      emptyMessage="Aún no hay resultados disponibles para la selección actual.">
                             <p:column headerText="Pos." style="width:70px">
-                                <h:outputText value="#{result.position == 1 ? '🥇' : result.position == 2 ? '🥈' : result.position == 3 ? '🥉' : result.position}"/>
+                                <h:outputText value="#{result.position == 1 ? '🥇' : result.position == 2 ? '🥈' : result.position == 3 ? '🥉' : result.position}"
+                                              title="Posición #{result.position}"/>
                             </p:column>
                             <p:column headerText="Gimnasta">
                                 <h:outputText value="#{result.gymnast.fullName}"/>
