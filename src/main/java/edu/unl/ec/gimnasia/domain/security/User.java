@@ -17,6 +17,17 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Representa un usuario del sistema.
+ *
+ * Almacena las credenciales de acceso utilizadas para la
+ * autenticación, incluyendo nombre de usuario y contraseña.
+ *
+ * Además, mantiene la relación con los roles asignados,
+ * los cuales determinan los permisos y funcionalidades
+ * disponibles para cada usuario dentro de la aplicación.
+ */
+
 @Entity
 @Table(name = "app_user")
 public class User implements Serializable {
