@@ -165,6 +165,10 @@ public class JudgeEvaluationController implements Serializable {
             );
             return;
         }
+        if (scores.isEmpty()) {
+            FacesUtil.addWarnMessage("Aviso", "No hay criterios de evaluación para guardar.");
+            return;
+        }
 
         try {
 
