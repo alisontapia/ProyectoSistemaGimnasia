@@ -1,3 +1,9 @@
+# Archivo Docker Compose encargado de levantar la
+# infraestructura de persistencia del sistema.
+# Configura PostgreSQL, herramientas de administración
+# (Adminer y pgAdmin), red dedicada y almacenamiento
+# persistente para garantizar la disponibilidad de los
+# datos durante el desarrollo y las pruebas.
 services:
   gimnasia-pg-db:
     image: postgres:${POSTGRES_VERSION}
