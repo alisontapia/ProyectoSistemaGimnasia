@@ -14,3 +14,4 @@ public class AlreadyEntityException extends Exception {
         super(message, cause);
     }
 }
+
