@@ -45,10 +45,12 @@ public class JudgeRepository implements Serializable {
         return judge;
     }
 
+    /**
+     * Recupera todos los jueces registrados en el sistema.
+     */
     public List<Judge> findAll() {
         return crudService.findWithNamedQuery("Judge.findAll");
     }
-
     public List<Judge> findWithoutAccount() {
         return crudService.findWithNamedQuery("Judge.findWithoutAccount");
     }
