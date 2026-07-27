@@ -1,3 +1,6 @@
+-- Datos iniciales de seguridad y administración del sistema.
+-- Se crean permisos, roles, relaciones de acceso y el usuario
+-- administrador por defecto para la configuración inicial.
 
 INSERT INTO permission (id, resource, action) VALUES (1, '/gymnast/list.xhtml', 'ALL');
 INSERT INTO permission (id, resource, action) VALUES (2, '/competition/list.xhtml', 'ALL');
