@@ -191,6 +191,7 @@
                             <p:commandButton
                                     value="Guardar calificación"
                                     icon="pi pi-check"
+                                    title="Guarda todas las calificaciones ingresadas"
                                     action="#{judgeEvaluationController.saveScores}"
                                     update=":evaluateForm"
                                     oncomplete="if (!args.validationFailed) { PF('evaluateDialog').hide(); }"/>
