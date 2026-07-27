@@ -12,6 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Repositorio encargado de la persistencia de la entidad Gymnast.
+ *
+ * Gestiona las operaciones de almacenamiento, actualización y
+ * consulta de gimnastas, además de validar que no existan registros
+ * duplicados con la misma cédula antes de realizar la creación.
+ */
+
 @Stateless
 public class GymnastRepository implements Serializable {
 
