@@ -20,6 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Representa una categoría dentro de una competencia de gimnasia.
+ *
+ * Define las restricciones de participación mediante rangos de edad
+ * y niveles deportivos. Además, mantiene la relación entre una
+ * competencia y las gimnastas que pertenecen a dicha categoría.
+ *
+ * Su responsabilidad principal es validar que las gimnastas cumplan
+ * con los requisitos de edad antes de ser asociadas a la categoría.
+ */
+
 @Entity
 @Table(name = "category")
 public class Category implements Serializable {
