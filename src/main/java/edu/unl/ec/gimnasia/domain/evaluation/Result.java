@@ -24,6 +24,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Representa el resultado final obtenido por una gimnasta
+ * en una competencia determinada.
+ *
+ * Almacena la puntuación final, posición alcanzada,
+ * medalla obtenida y fecha de generación del resultado.
+ *
+ * Además, permite recalcular automáticamente la puntuación
+ * a partir de las evaluaciones registradas en las distintas
+ * especialidades (Dificultad, Ejecución y Artístico) y
+ * determinar la categoría asociada.
+ */
+
 @Entity
 @Table(name = "result")
 @NamedQueries({
