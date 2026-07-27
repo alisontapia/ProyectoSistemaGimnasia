@@ -72,7 +72,7 @@ public class JudgeFacade implements Serializable {
         }
         if (!judge.getAssignedCompetitions().isEmpty()) {
             throw new EntityInUseException("No se puede eliminar a " + judge.getFullName()
-                    + ": esta asignado a una o mas competencias.");
+                    + ": esta asignado a una o más competencias.");
         }
         judgeRepository.delete(id);
     }
