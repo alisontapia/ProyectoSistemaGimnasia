@@ -119,7 +119,7 @@ public class JudgeFacade implements Serializable {
                 throw new AlreadyEntityException("Ya existe otra cuenta con el nombre de usuario [" + username + "]");
             }
         } catch (EntityNotFoundException e) {
-
+            // Username disponible: no existe ningún juez registrado con ese nombre
         }
     }
 }
