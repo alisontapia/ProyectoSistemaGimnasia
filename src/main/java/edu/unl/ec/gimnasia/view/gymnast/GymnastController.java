@@ -15,6 +15,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Controlador de la vista de gimnastas.
+ *
+ * Actúa como intermediario entre las páginas JSF y la capa de negocio,
+ * gestionando las operaciones de registro, edición y consulta de
+ * gimnastas. Además, administra los datos mostrados en la interfaz
+ * y las notificaciones presentadas al usuario.
+ */
+
 @Named
 @ViewScoped
 public class GymnastController implements Serializable {
