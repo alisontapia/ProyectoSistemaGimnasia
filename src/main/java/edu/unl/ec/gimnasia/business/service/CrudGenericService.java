@@ -10,6 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Servicio genérico de persistencia.
+ *
+ * Proporciona operaciones CRUD (Crear, Leer, Actualizar y Eliminar)
+ * para las entidades del sistema mediante JPA y EntityManager.
+ *
+ * Además, permite ejecutar consultas nombradas (NamedQuery) con o
+ * sin parámetros, centralizando las operaciones comunes de acceso
+ * a datos y evitando la duplicación de código en los repositorios.
+ */
+
 @Stateless
 public class CrudGenericService {
 
