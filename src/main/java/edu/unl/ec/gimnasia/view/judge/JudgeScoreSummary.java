@@ -36,10 +36,8 @@ public class JudgeScoreSummary implements Serializable {
         return isClosed() ? "Cerrada (solo consulta)" : "Abierta (editable)";
     }
 
-    public double getTotalPenalizaciones() {
-        return details.stream().mapToDouble(Evaluation::getScore).sum();
+    public double getTotalPenalizaciones() {return details == null ? 0.0 : details.stream().mapToDouble(Evaluation::getScore).sum();
     }
-
     public Competition getCompetition() {
         return competition;
     }
