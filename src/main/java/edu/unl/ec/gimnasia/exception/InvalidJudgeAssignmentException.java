@@ -13,3 +13,4 @@ public class InvalidJudgeAssignmentException extends Exception {
         super(message);
     }
 }
+
