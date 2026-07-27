@@ -53,3 +53,4 @@ public class EvaluationRepository implements Serializable {
         return crudService.findWithNamedQuery("Evaluation.findByJudge", params);
     }
 }
+
