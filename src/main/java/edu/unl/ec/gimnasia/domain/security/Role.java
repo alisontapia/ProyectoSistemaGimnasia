@@ -19,6 +19,21 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Representa un rol dentro del sistema de seguridad.
+ *
+ * Un rol agrupa un conjunto de permisos que determinan
+ * las acciones que un usuario puede realizar sobre los
+ * recursos de la aplicación.
+ *
+ * Ejemplos de roles definidos:
+ * - ADMINISTRADOR
+ * - JUEZ
+ *
+ * Los roles son asignados a los usuarios para gestionar
+ * la autorización y el control de acceso del sistema.
+ */
+
 @Entity
 @Table(name = "role")
 @NamedQueries({
