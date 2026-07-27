@@ -4,7 +4,11 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
                                  https://jakarta.ee/xml/ns/persistence/persistence_3_1.xsd"
              version="3.0">
-
+        <!--
+            Configuración de la unidad de persistencia del sistema.
+            Define la conexión con PostgreSQL, la generación automática
+            del esquema de base de datos y la carga de datos iniciales.
+        -->
         <persistence-unit name="gimnasiaPU" transaction-type="JTA">
         <jta-data-source>jdbc/gimnasiaDS</jta-data-source>
 
