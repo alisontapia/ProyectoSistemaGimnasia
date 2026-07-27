@@ -72,7 +72,7 @@ public class Judge extends Person {
     }
 
     public void assignCompetition(Competition competition) {
-        if (!assignedCompetitions.contains(competition)) {
+        if (competition != null && !assignedCompetitions.contains(competition)) {
             assignedCompetitions.add(competition);
         }
     }
