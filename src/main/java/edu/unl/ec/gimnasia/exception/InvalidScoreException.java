@@ -6,3 +6,4 @@ public class InvalidScoreException extends Exception {
         super(message);
     }
 }
+
