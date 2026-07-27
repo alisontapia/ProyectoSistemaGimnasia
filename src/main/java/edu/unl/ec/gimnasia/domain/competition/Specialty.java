@@ -1,5 +1,20 @@
 package edu.unl.ec.gimnasia.domain.competition;
 
+/**
+ * Define las especialidades de evaluación utilizadas en las
+ * competencias de gimnasia rítmica.
+ *
+ * Cada especialidad contiene un conjunto de criterios de
+ * calificación y determina si la puntuación se calcula como
+ * suma de valores o como deducción de penalizaciones sobre
+ * una nota base.
+ *
+ * Especialidades disponibles:
+ * - DIFICULTAD
+ * - EJECUCION
+ * - ARTISTICO
+ */
+
 public enum Specialty {
 
     DIFICULTAD(false, new String[]{
