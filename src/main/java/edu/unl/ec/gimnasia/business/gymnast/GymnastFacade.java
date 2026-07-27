@@ -13,6 +13,15 @@ import jakarta.inject.Inject;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+/**
+ * Fachada encargada de gestionar las operaciones de negocio
+ * relacionadas con las gimnastas.
+ *
+ * Centraliza los casos de uso de registro, actualización,
+ * consulta individual y listado de gimnastas, aplicando
+ * las reglas de negocio correspondientes, como la validación
+ * de edad y la verificación de existencia de registros.
+ */
 
 @Stateless
 public class GymnastFacade implements Serializable {
