@@ -61,7 +61,7 @@ public class CrudGenericService {
             return results.get(0);
         }
         throw new NonUniqueResultException(
-                "El NamedQuery [" + namedQueryName + "] devolvio mas de un resultado.");
+                "El NamedQuery [" + namedQueryName + "] devolvió más de un resultado.");
     }
 
     private void setParameters(Query query, Map<String, Object> parameters) {
