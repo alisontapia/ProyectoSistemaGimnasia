@@ -1,4 +1,13 @@
+<!--
+Configuración principal del servidor Liberty para el
+Sistema de Gimnasia Rítmica.
+
+Define las características del servidor, la aplicación
+desplegada, el registro de usuarios, la configuración
+de logs y la conexión a la base de datos PostgreSQL.
+-->
 <server description="defaultServer">
+    <!-- Habilita las tecnologías Jakarta EE utilizadas por la aplicación -->
     <featureManager>
         <feature>webProfile-10.0</feature>
     </featureManager>
@@ -7,7 +16,9 @@
     </basicRegistry>
     <keyStore id="defaultKeyStore" password="password" />
     <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080" httpsPort="9443" />
+    <!-- Despliegue de la aplicación web -->
     <webApplication location="gimnasia-web.war" contextRoot="/gimnasia"/>
+    <!-- Configuración de trazas y registros del servidor -->
 
         <logging
             consoleFormat="SIMPLE"
@@ -17,18 +28,21 @@
             isoDateFormat="true"
             maxFileSize="100"
             maxFiles="5"
-            traceSpecification="*=info:edu.unl.*=fine,eclipselink.sql=all"
-    />
+            traceSpecification="*=info:edu.unl.*=fine,eclipselink.sql=all"/>
+        <!-- Variables de entorno utilizadas para la conexión PostgreSQL -->
 
-        <variable name="db.host"     defaultValue="localhost"        envVarName="DB_HOST"/>
+    <variable name="db.host"     defaultValue="localhost"        envVarName="DB_HOST"/>
     <variable name="db.port"     defaultValue="5433"             envVarName="DB_PORT"/>
     <variable name="db.name"     defaultValue="gimnasia"         envVarName="DB_NAME"/>
     <variable name="db.user"     defaultValue="gimnasiauser"     envVarName="DB_USER"/>
     <variable name="db.password" defaultValue="gimnasiaUser2626" envVarName="DB_PASSWORD"/>
 
+    <!-- Biblioteca que contiene el controlador JDBC de PostgreSQL -->
+
     <library id="postgresLib">
         <fileset dir="${shared.resource.dir}/postgres/" include="postgresql-*.jar"/>
     </library>
+    <!-- Fuente de datos JPA utilizada por la aplicación -->
 
     <dataSource id="gimnasiaDS"
                 jndiName="jdbc/gimnasiaDS"
