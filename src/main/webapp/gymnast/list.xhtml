@@ -7,6 +7,14 @@
     <ui:composition template="/WEB-INF/template/base.xhtml">
         <ui:define name="title-view">Gimnastas</ui:define>
         <ui:define name="content">
+        <!--
+            Vista de gestión de gimnastas.
+
+            Permite visualizar las gimnastas registradas en el sistema,
+            registrar nuevas gimnastas y editar la información existente.
+            La interacción con la lógica de negocio se realiza mediante
+            GymnastController.
+        -->
             <h:form id="gymnastForm">
                 <p:growl showDetail="true"/>
                 <div class="page-title">
@@ -51,7 +59,7 @@
                 <p:dialog header="Gimnasta" widgetVar="gymnastDialog" id="gymnastDialog" modal="true"
                           responsive="true" width="420">
                     <h:panelGrid columns="2" cellpadding="6">
-                        <p:outputLabel for="nationalId" value="Cedula:"/>
+                        <p:outputLabel for="nationalId" value="Cédula:"/>
                         <p:inputText id="nationalId" value="#{gymnastController.nationalId}"
                                      disabled="#{gymnastController.editing}" required="true">
                             <f:validator validatorId="cedulaEcuatorianaValidator"/>
