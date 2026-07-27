@@ -118,7 +118,7 @@ public class Result implements Serializable {
             case 1 -> "Medalla de Oro";
             case 2 -> "Medalla de Plata";
             case 3 -> "Medalla de Bronce";
-            default -> "Sin medalla";
+            default -> "No ganó una medalla";
         };
     }
 
